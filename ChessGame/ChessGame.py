@@ -25,21 +25,21 @@ def Chesfield():
         print("")
 
 def convlettonumb(letter):
-    if letter == 'A':
+    if letter == 'A' or letter == 'a':
         return 0
-    if letter == 'B':
+    if letter == 'B' or letter == 'b':
         return 1
-    if letter == 'C':
+    if letter == 'C' or letter == 'c':
         return 2
-    if letter == 'D':
+    if letter == 'D' or letter == 'd':
         return 3
-    if letter == 'E':
+    if letter == 'E' or letter == 'e':
         return 4
-    if letter == 'F':
+    if letter == 'F' or letter == 'f':
         return 5
-    if letter == 'G':
+    if letter == 'G' or letter == 'g':
         return 6
-    if letter == 'H':
+    if letter == 'H' or letter == 'h':
         return 7
 
 def checkFieldUseW(x,y):
@@ -83,8 +83,7 @@ def checkTarget(target, enemyplayer, activeplayer):
 def farmer(p,t):
     moveint = abs(int(p[1]) - int(t[1]))
     if moveint > 0 and moveint < 3:
-        ChessField[int(p[1])-1][int(convlettonumb(p[0]))] = '_'
-        ChessField[int(t[1])-1][int(convlettonumb(t[0]))] = 'F'
+
 
 def tower(p,t):
     if p[1] == t[1]:
