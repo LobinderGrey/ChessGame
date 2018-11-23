@@ -1,70 +1,84 @@
 import os
 
-
 w, h = 8,8;
 winner = False
 
-
-ChessField = [['T', 'H', 'B', 'Q', 'K', 'B', 'H', 'T'], 
-              ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'], 
-              ['_', '_', '_', '_', '_', '_', '_', '_'], 
-              ['_', '_', '_', '_', '_', '_', '_', '_'], 
-              ['_', '_', '_', '_', '_', '_', '_', '_'], 
-              ['_', '_', '_', '_', '_', '_', '_', '_'], 
-              ['F', 'F', 'F', 'F', 'F', 'F', 'F', 'F'], 
-              ['T', 'H', 'B', 'K', 'Q', 'B', 'H', 'T']]
+playerWhite = ['F:A7','F:B7','F:C7','F:D7','F:E7','F:F7','F:G7','F:H7','T:H8','T:A8','H:G8','H:B8','B:F8','B:C8','K:D8','Q:E8']
+playerBlack = ['F:A2','F:B2','F:C2','F:D2','F:E2','F:F2','F:G2','F:H2','T:H1','T:A1','H:G1','H:B1','B:F1','B:C1','Q:D1','K:E1']
 
 def Chesfield():
     print("a b c d e f g h ")
     counter = 0
-    for line in ChessField:
-        counter = counter + 1
-        for letter in line:
-            print(letter, end=' ')
-        print(counter, end=' ')
+    for counter in range(0, 8):
+        index = 0
+        chesfieldline = ''
+        for index in range(0, 8):
+            figure = checkFieldUseW(index, counter)
+            if figure == None:
+                figure = checkFieldUseB(index, counter)
+            if figure == None:
+                chesfieldline = chesfieldline + '_ '
+            else:
+                chesfieldline = chesfieldline + figure + ' '
+
+        print(chesfieldline + str(counter + 1))
         print("")
 
 def convlettonumb(letter):
-    if letter == 'a':
+    if letter == 'A':
         return 0
-    if letter == 'b':
+    if letter == 'B':
         return 1
-    if letter == 'c':
+    if letter == 'C':
         return 2
-    if letter == 'd':
+    if letter == 'D':
         return 3
-    if letter == 'e':
+    if letter == 'E':
         return 4
-    if letter == 'f':
+    if letter == 'F':
         return 5
-    if letter == 'g':
+    if letter == 'G':
         return 6
-    if letter == 'h':
+    if letter == 'H':
         return 7
 
-def checkSelection(figure):
-    if len(figure) == 2:
-        print(figure[0])
-        sy = int(convlettonumb(figure[0]))
-        print(figure[1])
-        sx = int(figure[1])-1
-    if sx < 8 and sy >= 0 :
-        print(ChessField[sx][sy])
-        print(" " + str(sx)  + "-" + str(sy) )
-    if ChessField[sx][sy] == '_':
-        print("Keine Figur gewaehlt")
-    return ChessField[sx][sy]
+def checkFieldUseW(x,y):
+    for figure in playerWhite:
+        numbtochar = convlettonumb(figure[2])
+        if int(numbtochar) == int(x) and int(figure[3]) - 1 == int(y):
+            return figure[0]
+    return None
 
-def checkTarget(target):
+def checkFieldUseB(x,y):
+    for figure in playerBlack:
+        numbtochar = convlettonumb(figure[2])
+        if int(numbtochar) == int(x) and int(figure[3]) - 1 == int(y):
+            return figure[0]
+    return None
+        
+def checkSelection(selection, activeplayer):
+    if len(selection) == 2:
+        print(selection[0])
+        sy = int(convlettonumb(selection[0]))
+        print(selection[1])
+        print(sy)
+        sx = int(selection[1])-1
+        if any(selection in s for s in activeplayer):
+            print('player selection')   
+        else:
+            print("Keine Figur gewaehlt")
+
+def checkTarget(target, enemyplayer, activeplayer):
     if len(target) == 2:
         print(target[0])
         sy = int(convlettonumb(target[0]))
         print(target[1])
         sx = int(target[1])-1
-    if sx < 8 and sy >= 0 :
-        print(ChessField[sx][sy])
-        print(" " + str(sx)  + "-" + str(sy) )
-    return ChessField[sx][sy]
+    if any(target in s for s in enemyplayer):
+        print('Enemy Player targeted')
+    if any(target in s for s in activeplayer):
+        print('Own figure Targeted')
+
 
 def farmer(p,t):
     moveint = abs(int(p[1]) - int(t[1]))
@@ -79,24 +93,21 @@ def tower(p,t):
     if p[0] == t[0]:
         print(abs(int(convlettonumb(p[0])) - int(convlettonumb(t[0]))))
 
-    ChessField[int(p[1])-1][int(convlettonumb(p[0]))] = '_'
-    ChessField[int(t[1])-1][int(convlettonumb(t[0]))] = 'T'
-
 def horse(p,t):
-    ChessField[int(p[0])][int(p[1])] = '_'
-    ChessField[int(t[0])][int(t[1])] = 'H'
+
+    print('horse')
 
 def bishop(p,t):
-    ChessField[int(p[0])][int(p[1])] = '_'
-    ChessField[int(t[0])][int(t[1])] = 'B'
+
+    print('bishop')
 
 def queen(p,t):
-    ChessField[int(p[0])][int(p[1])] = '_'
-    ChessField[int(t[0])][int(t[1])] = 'Q'
+
+    print('queen')
 
 def king(p,t):
-    ChessField[int(p[0])][int(p[1])] = '_'
-    ChessField[int(t[0])][int(t[1])] = 'K'
+
+    print('king')
 
 def checkFigure(token, Sfigure, target):
     if token == 'F':
@@ -115,10 +126,10 @@ def checkFigure(token, Sfigure, target):
 while winner == False:
     Chesfield() 
     playerf = input('Waehle Figur Koordinate: ') 
-    Sfigure = checkSelection(playerf) 
+    Sfigure = checkSelection(playerf, playerBlack) 
     target = input('Waehle  Zielkoordinate: ') 
-    Starget = checkTarget(target) 
-    checkFigure(Sfigure, playerf, target) 
+    Starget = checkTarget(target, playerWhite, playerBlack) 
+    #checkFigure(Sfigure, playerWhite, target) 
     #os.system('cls') 
     Chesfield() 
-    winner = True
+    #winner = True
